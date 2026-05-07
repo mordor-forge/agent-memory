@@ -38,7 +38,7 @@ jobs:
         run: |
           ./cockroach-v26.1.3.linux-amd64/cockroach start-single-node \
             --insecure \
-            --store=type=mem,size=0.25GiB \
+            --store=type=mem,size=0.75GiB \
             --listen-addr=127.0.0.1:26257 \
             --http-addr=127.0.0.1:8080 \
             --background
