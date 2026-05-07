@@ -1,0 +1,10 @@
+/bin/
+/dist/
+/.cache/
+/.direnv/
+/coverage.out
+/.env
+/.envrc.local
+/.idea/
+/.vscode/
+*.log

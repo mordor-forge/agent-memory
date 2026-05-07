@@ -1,0 +1,65 @@
+version: 2
+project_name: agent-memory
+
+before:
+  hooks:
+    - go test ./...
+
+builds:
+  - id: memoryd
+    main: ./cmd/memoryd
+    binary: memoryd
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/mordor-forge/agent-memory/internal/version.Name=agent-memory
+      - -X github.com/mordor-forge/agent-memory/internal/version.Version={{ .Version }}
+      - -X github.com/mordor-forge/agent-memory/internal/version.Commit={{ .Commit }}
+      - -X github.com/mordor-forge/agent-memory/internal/version.Date={{ .Date }}
+  - id: agent-memory-mcp
+    main: ./cmd/agent-memory-mcp
+    binary: agent-memory-mcp
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+      - -X github.com/mordor-forge/agent-memory/internal/version.Name=agent-memory
+      - -X github.com/mordor-forge/agent-memory/internal/version.Version={{ .Version }}
+      - -X github.com/mordor-forge/agent-memory/internal/version.Commit={{ .Commit }}
+      - -X github.com/mordor-forge/agent-memory/internal/version.Date={{ .Date }}
+
+archives:
+  - id: default
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+
+checksum:
+  name_template: checksums.txt
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  use: git
+
+sboms:
+  - artifacts: archive

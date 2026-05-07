@@ -1,0 +1,11 @@
+.git
+.direnv
+bin
+dist
+.cache
+coverage.out
+stash
+trident-mcp
+gemini-media-mcp
+agent-memory-system-spec.md
+agent-memory-implementation-roadmap.md
