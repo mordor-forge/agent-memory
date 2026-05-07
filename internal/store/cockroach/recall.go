@@ -27,7 +27,7 @@ func (s *Store) SearchMemories(ctx context.Context, req memory.RecallRequest, qu
 	var (
 		builder strings.Builder
 		args    []any
-		argN    = 1
+		argN    int
 	)
 	builder.WriteString(`
 		SELECT m.id, m.tenant_id, m.agent_id, m.thread_id, m.kind, m.status, m.content, m.summary, m.attributes,
@@ -41,27 +41,27 @@ func (s *Store) SearchMemories(ctx context.Context, req memory.RecallRequest, qu
 
 	if req.AgentID != nil {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND me.agent_id = $%d", argN))
+		fmt.Fprintf(&builder, " AND me.agent_id = $%d", argN)
 		args = append(args, *req.AgentID)
 	}
 	if req.ThreadID != nil {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND m.thread_id = $%d", argN))
+		fmt.Fprintf(&builder, " AND m.thread_id = $%d", argN)
 		args = append(args, *req.ThreadID)
 	}
 	if strings.TrimSpace(req.Kind) != "" {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND m.kind = $%d", argN))
+		fmt.Fprintf(&builder, " AND m.kind = $%d", argN)
 		args = append(args, strings.TrimSpace(req.Kind))
 	}
 	if strings.TrimSpace(req.Status) != "" {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND m.status = $%d", argN))
+		fmt.Fprintf(&builder, " AND m.status = $%d", argN)
 		args = append(args, strings.TrimSpace(req.Status))
 	}
 
 	argN++
-	builder.WriteString(fmt.Sprintf(" ORDER BY me.embedding <=> $1, m.created_at, m.id LIMIT $%d", argN))
+	fmt.Fprintf(&builder, " ORDER BY me.embedding <=> $1, m.created_at, m.id LIMIT $%d", argN)
 	args = append(args, limit)
 
 	rows, err := s.pool.Query(ctx, builder.String(), args...)

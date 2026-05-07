@@ -99,11 +99,11 @@ func (s *Store) ListProjectionCheckpoints(ctx context.Context, req memory.ListPr
 	args = append(args, req.TenantID)
 	if strings.TrimSpace(req.ProjectionName) != "" {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND projection_name = $%d", argN))
+		fmt.Fprintf(&builder, " AND projection_name = $%d", argN)
 		args = append(args, strings.TrimSpace(req.ProjectionName))
 	}
 	argN++
-	builder.WriteString(fmt.Sprintf(" ORDER BY projection_name, shard_id LIMIT $%d", argN))
+	fmt.Fprintf(&builder, " ORDER BY projection_name, shard_id LIMIT $%d", argN)
 	args = append(args, limit)
 
 	rows, err := s.pool.Query(ctx, builder.String(), args...)
@@ -159,11 +159,11 @@ func (s *Store) ListConsolidationRuns(ctx context.Context, req memory.ListConsol
 	args = append(args, req.TenantID)
 	if strings.TrimSpace(req.ProjectionName) != "" {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND projection_name = $%d", argN))
+		fmt.Fprintf(&builder, " AND projection_name = $%d", argN)
 		args = append(args, strings.TrimSpace(req.ProjectionName))
 	}
 	argN++
-	builder.WriteString(fmt.Sprintf(" ORDER BY created_at DESC LIMIT $%d", argN))
+	fmt.Fprintf(&builder, " ORDER BY created_at DESC LIMIT $%d", argN)
 	args = append(args, limit)
 
 	rows, err := s.pool.Query(ctx, builder.String(), args...)

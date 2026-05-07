@@ -34,9 +34,9 @@ jobs:
           fi
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: latest
+        run: |
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+          "$(go env GOPATH)/bin/golangci-lint" run
 
       - name: Run unit tests
         run: go test -race ./...
@@ -73,11 +73,19 @@ jobs:
 
       - name: Start CockroachDB
         run: |
-          ./cockroach-v26.1.3.linux-amd64/cockroach start-single-node                     --insecure                     --store=type=mem,size=0.25GiB                     --listen-addr=127.0.0.1:26257                     --http-addr=127.0.0.1:8080                     --background
+          ./cockroach-v26.1.3.linux-amd64/cockroach start-single-node \
+            --insecure \
+            --store=type=mem,size=0.25GiB \
+            --listen-addr=127.0.0.1:26257 \
+            --http-addr=127.0.0.1:8080 \
+            --background
 
       - name: Wait for CockroachDB
         run: |
-          ./cockroach-v26.1.3.linux-amd64/cockroach sql                     --insecure                     --host=127.0.0.1:26257                     -e 'select 1'
+          ./cockroach-v26.1.3.linux-amd64/cockroach sql \
+            --insecure \
+            --host=127.0.0.1:26257 \
+            -e 'select 1'
 
       - name: Run integration and migration upgrade tests
         env:

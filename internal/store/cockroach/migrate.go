@@ -24,7 +24,9 @@ func (s *Store) Migrate(ctx context.Context) error {
 	}
 
 	sqlDB := stdlib.OpenDBFromPool(s.pool)
-	defer sqlDB.Close()
+	defer func() {
+		_ = sqlDB.Close()
+	}()
 
 	goose.SetBaseFS(migrationFS)
 	goose.SetLogger(discardLogger{})
