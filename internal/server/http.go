@@ -615,7 +615,9 @@ func hasSupportedV1ContentType(raw string) bool {
 
 func decodeJSONBody(w http.ResponseWriter, r *http.Request, dst any) error {
 	r.Body = http.MaxBytesReader(w, r.Body, maxJSONBodyBytes)
-	defer r.Body.Close()
+	defer func() {
+		_ = r.Body.Close()
+	}()
 
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()

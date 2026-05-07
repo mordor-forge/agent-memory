@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
@@ -140,20 +139,6 @@ func scanEpisode(scanner rowScanner) (memory.Episode, error) {
 	}
 	episode.Payload = payload
 	return episode, nil
-}
-
-func cursorFromEpisode(episode memory.Episode) memory.CheckpointCursor {
-	return memory.CheckpointCursor{
-		CreatedAt: episode.CreatedAt,
-		ID:        episode.ID,
-	}
-}
-
-func optionalTime(value *time.Time) any {
-	if value == nil {
-		return nil
-	}
-	return *value
 }
 
 func scanMemory(scanner rowScanner) (memory.Memory, error) {

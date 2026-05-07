@@ -352,27 +352,27 @@ func (s *Store) QueryMemories(ctx context.Context, req memory.QueryMemoriesReque
 
 	if req.AgentID != nil {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND agent_id = $%d", argN))
+		fmt.Fprintf(&builder, " AND agent_id = $%d", argN)
 		args = append(args, *req.AgentID)
 	}
 	if req.ThreadID != nil {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND thread_id = $%d", argN))
+		fmt.Fprintf(&builder, " AND thread_id = $%d", argN)
 		args = append(args, *req.ThreadID)
 	}
 	if strings.TrimSpace(req.Kind) != "" {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND kind = $%d", argN))
+		fmt.Fprintf(&builder, " AND kind = $%d", argN)
 		args = append(args, strings.TrimSpace(req.Kind))
 	}
 	if strings.TrimSpace(req.Status) != "" {
 		argN++
-		builder.WriteString(fmt.Sprintf(" AND status = $%d", argN))
+		fmt.Fprintf(&builder, " AND status = $%d", argN)
 		args = append(args, strings.TrimSpace(req.Status))
 	}
 
 	argN++
-	builder.WriteString(fmt.Sprintf(" ORDER BY created_at, id LIMIT $%d", argN))
+	fmt.Fprintf(&builder, " ORDER BY created_at, id LIMIT $%d", argN)
 	args = append(args, limit)
 
 	rows, err := s.pool.Query(ctx, builder.String(), args...)

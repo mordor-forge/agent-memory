@@ -506,4 +506,4 @@ The MCP layer uses camelCase tool arguments, consistent with your other MCP serv
 - Release scope and process notes live in `docs/release.md`.
 - Deployment guidance lives in `docs/operations/deploy.md`.
 - Backup/export/restore guidance lives in `docs/operations/backup-restore.md`.
-- The repository is licensed under `Apache-2.0`. Historical license notes live in `LICENSE-OPTIONS.md`.
+- The repository is licensed under `Apache-2.0`.
